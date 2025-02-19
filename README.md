@@ -1,1 +1,2 @@
-# DevTinder
+#
+npm i -D daisyui@beta
