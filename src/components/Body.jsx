@@ -1,19 +1,22 @@
-import React, { useState } from "react";
-
+import React, { useState , useContext } from "react";
+import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router";
 import Navbar from "./Navbar";
-import Footer from "./Footer";
 import { ThemeContext } from "../ThemeContext";
+import Footer from "./Footer";
+
 function Body() {
-  const [theme , setTheme] = useState(false);
+  const location = useLocation();
+  const [theme, setTheme] = useState(false);
+  const isLoginPage = location.pathname === "/login";
   return (
-   <ThemeContext.Provider value={{theme,setTheme}}>
-     <div>
-      <Navbar />
-      <Outlet />
-      <Footer/>
-    </div>
-   </ThemeContext.Provider>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      <div className="min-h-screen w-full " data-theme={`${theme ? "light" : "dark"}`}>
+        <Navbar />
+        <Outlet />
+        {!isLoginPage && <Footer />}
+      </div>
+    </ThemeContext.Provider>
   );
 }
 
