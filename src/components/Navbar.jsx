@@ -2,12 +2,13 @@ import { useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
 import { useLocation } from "react-router-dom";
 import { navItems } from "../content/nav-items";
+import { useSelector } from "react-redux";
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
-  console.log(theme);
 
+  const user = useSelector(store => store.user);
   return (
     <div
       className={`navbar ${isLoginPage ? "" : "shadow-sm"}`}
@@ -25,7 +26,7 @@ const Navbar = () => {
         />
       </div>
 
-      {!isLoginPage && (
+      {user && (
         <>
           {/* navigation links */}
           <div className="hidden md:flex gap-2 items-center mx-4">
@@ -49,8 +50,9 @@ const Navbar = () => {
                 <div className="w-10 rounded-full">
                   <img
                     alt="Tailwind CSS Navbar component"
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    src={user?.data?.photoURL}
                   />
+                  {console.log(user.photoURL)}
                 </div>
               </div>
               <ul

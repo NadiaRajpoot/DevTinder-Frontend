@@ -4,15 +4,18 @@ import { ThemeContext } from "../ThemeContext";
 import emailIcon from "../assets/Form-icons/email.png";
 import passwordIcon from "../assets/Form-icons/password.png";
 import { TfiWorld } from "react-icons/tfi";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../utils/userSlice";
+
 
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("");
-  const [password, setPassword] = useState("");
+  const [emailId, setEmailId] = useState("hamza77@gmail.com");
+  const [password, setPassword] = useState("Hamza@1234");
   const [remember, setRemember] = useState(false);
 
   const { theme } = useContext(ThemeContext);
-  console.log(theme);
+   const dispatch = useDispatch();
   const handleLogin = async () => {
     try {
       const res = await axios.post(
@@ -23,6 +26,8 @@ const Login = () => {
         },
         { withCredentials: true }
       );
+    
+      dispatch(addUser(res.data))
     } catch (err) {
       console.log(err);
     }
