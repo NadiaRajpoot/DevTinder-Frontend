@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useState, useContext } from "react";
-import { FaLock } from "react-icons/fa6";
 import { ThemeContext } from "../ThemeContext";
 import emailIcon from "../assets/Form-icons/email.png";
 import passwordIcon from "../assets/Form-icons/password.png";
-import { MdEmail } from "react-icons/md";
 import { TfiWorld } from "react-icons/tfi";
+
+
 const Login = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
