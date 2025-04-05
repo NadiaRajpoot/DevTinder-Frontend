@@ -9,18 +9,18 @@ import appStore from "../utils/appStore";
 function App() {
   return (
     <>
-    <Provider store={appStore}>
-  <BrowserRouter basename="/">
-    <Routes>
-      <Route path="/" element={<Body />}>
-        <Route index element={<Feed />} />
-        <Route path="Login" element={<Login />} />
-        <Route path="Profile" element={<Profile />} />
-      </Route>
-    </Routes>
-  </BrowserRouter>
-</Provider>
+      <Provider store={appStore}>
+        <BrowserRouter basename="/">
+          <Routes>
+            <Route path="/" element={<Body />}>
+              <Route index element={<Feed />} />
+              <Route path="Login" element={<Login />} />
 
+              <Route path="Profile" element={<Profile />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </Provider>
     </>
   );
 }

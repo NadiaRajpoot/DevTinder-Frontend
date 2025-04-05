@@ -3,19 +3,48 @@ import React, { useState, useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
 import emailIcon from "../assets/Form-icons/email.png";
 import passwordIcon from "../assets/Form-icons/password.png";
+import personIcon from "../assets/Form-icons/person.png";
 import { TfiWorld } from "react-icons/tfi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../utils/userSlice";
 import { useNavigate } from "react-router";
 import { BASE_URL } from "../../utils/constant";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("hamza77@gmail.com");
+  const [emailId, setEmailId] = useState("hamza774@gmail.com");
   const [password, setPassword] = useState("Hamza@1234");
+  const [firstName, setFirstName] = useState("Hamza");
+  const [lastName, setLastName] = useState("yaqoob");
   const [remember, setRemember] = useState(false);
+  const [isLoginForm, setisLoginForm] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [signupError, setSignupError] = useState("");
+
   const { theme } = useContext(ThemeContext);
+  const user = useSelector((store) => store.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const handleSignUp = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/signup",
+        {
+          firstName,
+          lastName,
+          emailId,
+          password,
+        },
+        { withCredentials: true }
+      );
+
+      console.log("Signup successful", res.data);
+      setisLoginForm(true); //  switch to login form after signup
+    } catch (err) {
+      setSignupError(err.response?.data || "Signup failed!");
+    }
+  };
+
   const handleLogin = async () => {
     try {
       const res = await axios.post(
@@ -30,13 +59,15 @@ const Login = () => {
       dispatch(addUser(res.data));
       return navigate("/");
     } catch (err) {
-      console.log(err);
+      setLoginError(err.response?.data || "Login failed!");
     }
   };
 
   return (
     <div
-      className="flex items-center justify-center rounded-2xl my-10 bg-dark-100 "
+      className={`flex items-center justify-center rounded-2xl ${
+        isLoginForm ? "my-10" : "my-5"
+      } bg-dark-100`}
       data-theme={`${theme ? "light" : "dark"}`}
     >
       <div
@@ -50,11 +81,54 @@ const Login = () => {
               <TfiWorld size={24} color="#6f51ee" />
             </div>
           </div>
-          <h2 className="card-title m-auto text-xl">Sign In with email</h2>
+          <h2 className="card-title m-auto text-xl"></h2>
+          {`${isLoginForm ? "Sign In with email" : "Create an account"}`}
           <p className="text-center font-light text-[12px]">
-            Please enter your details to sign in. For free.
+            {`  Please enter your details to ${
+              isLoginForm ? "sign in" : "sign up"
+            }. For free.`}
           </p>
-          <fieldset className="fieldset">
+
+          <fieldset className="fieldset ">
+            {!isLoginForm && (
+              <>
+                <div
+                  className={`  bg-gray-100 shadow-sm rounded-xl h-10 flex items-center`}
+                >
+                  <img
+                    src={personIcon}
+                    alt="email"
+                    className=" w-4  ml-4 mr-3 "
+                  />
+
+                  <input
+                    type="text"
+                    className=" outline-none w-56 border-none text-black  placeholder:text-gray-400"
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </div>
+                <div
+                  className={` my-2 bg-gray-100 shadow-sm rounded-xl h-10 flex items-center`}
+                >
+                  <img
+                    src={personIcon}
+                    alt="email"
+                    className=" w-4  ml-4 mr-3 "
+                  />
+
+                  <input
+                    type="text"
+                    className=" outline-none w-56 border-none text-black  placeholder:text-gray-400"
+                    placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+              </>
+            )}
+
             <div
               className={` my-2 bg-gray-100 shadow-sm rounded-xl h-10 flex items-center`}
             >
@@ -88,37 +162,57 @@ const Login = () => {
               />
             </div>
 
+            {(isLoginForm && loginError) || (!isLoginForm && signupError) ? (
+              <p className="text-red-500 text-left ml-5 mb-2 text-xs">
+                {isLoginForm ? loginError : signupError}
+              </p>
+            ) : null}
+
             <div className="flex items-center justify-between ">
               <label className="flex items-center text-[0.7rem] text-gray-600">
                 <input
                   type="checkbox"
                   checked={remember}
                   onChange={() => setRemember(!remember)}
-                  className="mr-2 rounded border-gray-400 "
+                  className="mr-2 rounded border-gray-400  "
                 />
-                Remember for 30 days
+                Remember for 7 days
               </label>
-              <a
-                href="#"
-                className="text-[0.7rem] text-purple-600 hover:underline"
-              >
-                Forgot password?
-              </a>
+              {isLoginForm && (
+                <a
+                  href="#"
+                  className="text-[0.7rem] text-purple-600 hover:underline"
+                >
+                  Forgot password?
+                </a>
+              )}
             </div>
           </fieldset>
 
-          <div className="card-actions justify-center my-4">
+          <div
+            className={`card-actions justify-center {${
+              isLoginForm ? "my-4" : "my-2"
+            }}`}
+          >
             <button
               className="btn  w-full font-medium text-[0.8rem] bg-gradient-to-b from-[#8c75e3] to-[#6f51ee] text-white py-2 rounded-lg shadow-md"
-              onClick={handleLogin}
+              onClick={isLoginForm ? handleLogin : handleSignUp}
             >
-              Sign in
+              {`${isLoginForm ? "Sign in" : "Sign up"}`}
             </button>
           </div>
           <p className="text-center text-[0.7rem] text-gray-500 ">
-            Don’t have an account?{" "}
-            <a href="#" className="text-purple-600 hover:underline">
-              Create account
+            {`${
+              isLoginForm ? "Don’t have an account?" : "Already on devTinder?"
+            }`}
+            <a
+              href="#"
+              onClick={() => {
+                setisLoginForm(!isLoginForm);
+              }}
+              className="text-purple-600 hover:underline"
+            >
+              {`${isLoginForm ? " Create account" : " Sign In"}`}
             </a>
           </p>
         </div>

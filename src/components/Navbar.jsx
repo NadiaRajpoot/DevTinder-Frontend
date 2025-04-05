@@ -1,14 +1,32 @@
 import { useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { navItems } from "../content/nav-items";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { BASE_URL } from "../../utils/constant";
+import { removeUser } from "../../utils/userSlice";
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
+  const user = useSelector((store) => store.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const user = useSelector(store => store.user);
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/logout",
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeUser());
+      return navigate("/login");
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div
       className={`navbar ${isLoginPage ? "" : "shadow-sm"}`}
@@ -62,20 +80,20 @@ const Navbar = () => {
                 <li className="md:hidden">
                   <a>Home</a>
                 </li>
-                <li  >
+                <li>
                   <a className="justify-between">
                     Profile
                     <span className="badge">New</span>
                   </a>
                 </li>
-                <li  className="md:hidden">
+                <li className="md:hidden">
                   <a>Connections</a>
                 </li>
-                <li  className="md:hidden">
+                <li className="md:hidden">
                   <a>Requests</a>
                 </li>
                 <li className="md:visible">
-                  <a>Logout</a>
+                  <a onClick={handleLogout}>Logout</a>
                 </li>
               </ul>
             </div>
