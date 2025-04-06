@@ -21,10 +21,10 @@ const UserCard = ({ user }) => {
           <p>{gender?.charAt(0).toUpperCase() + gender?.slice(1)}</p>
         </div>
         
-          <span className="mr-2">Skills:  {skills?.length > 28 ? `${skills.substring(0, 28) }...` : skills }</span>
+          <span className="mr-2">  {skills?.length > 28 ? `${skills.substring(0, 28) }...` : skills }</span>
        
 
-        <p className="mb-4 overflow-hidden">
+        <p className="mb-4 overflow-hidden text-[0.8rem]">
           {about?.length > 100 ? `${about.substring(0, 100)}...` : about}
         </p>
 

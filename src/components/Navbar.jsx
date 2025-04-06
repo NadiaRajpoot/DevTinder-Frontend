@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { navItems } from "../content/nav-items";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constant";
 import { removeUser } from "../../utils/userSlice";
+
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
   const location = useLocation();
@@ -28,9 +29,7 @@ const Navbar = () => {
     }
   };
 
-  const handleProfile = () => {
-    return navigate("/profile");
-  };
+
   return (
     <div
       className={`navbar ${isLoginPage ? "" : "shadow-sm"}`}
@@ -54,10 +53,10 @@ const Navbar = () => {
           <div className="hidden md:flex gap-2 items-center mx-4">
             <ul className="flex gap-10 mr-4">
               {navItems.map((item) => (
-                <li key={item.id} className="flex flex-col items-center">
-                  {item.icon}
-                  <span className="text-[0.8rem]">{item.title}</span>
-                </li>
+               <Link to = {item.path}> <li key={item.id} className="flex flex-col items-center">
+               {item.icon}
+               <span className="text-[0.8rem]">{item.title}</span>
+             </li></Link>
               ))}
             </ul>
           </div>
@@ -81,19 +80,19 @@ const Navbar = () => {
                 className="menu  menu-sm dropdown-content bg-base-200 rounded-box z-1 mt-3 w-52 p-2 shadow"
               >
                 <li className="md:hidden">
-                  <a>Home</a>
+                  <Link to="/">Home</Link>
                 </li>
                 <li>
-                  <a className="justify-between" onClick={handleProfile}>
+                  <Link className="justify-between" to="/profile">
                     Profile
                     <span className="badge">New</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className="md:hidden">
-                  <a>Connections</a>
+                  <Link to="/connections">Connections</Link>
                 </li>
                 <li className="md:hidden">
-                  <a>Requests</a>
+                  <Link>Requests</Link>
                 </li>
                 <li className="md:visible">
                   <a onClick={handleLogout}>Logout</a>
