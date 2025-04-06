@@ -5,14 +5,14 @@ import emailIcon from "../assets/Form-icons/email.png";
 import passwordIcon from "../assets/Form-icons/password.png";
 import personIcon from "../assets/Form-icons/person.png";
 import { TfiWorld } from "react-icons/tfi";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice";
 import { useNavigate } from "react-router";
 import { BASE_URL } from "../../utils/constant";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("hamza774@gmail.com");
-  const [password, setPassword] = useState("Hamza@1234");
+  const [emailId, setEmailId] = useState("nadiyee773@gmail.com");
+  const [password, setPassword] = useState("Nadiyee@1234");
   const [firstName, setFirstName] = useState("Hamza");
   const [lastName, setLastName] = useState("yaqoob");
   const [remember, setRemember] = useState(false);
@@ -21,7 +21,7 @@ const Login = () => {
   const [signupError, setSignupError] = useState("");
 
   const { theme } = useContext(ThemeContext);
-  const user = useSelector((store) => store.user);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

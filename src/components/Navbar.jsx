@@ -27,6 +27,10 @@ const Navbar = () => {
       console.log(err);
     }
   };
+
+  const handleProfile = () => {
+    return navigate("/profile");
+  };
   return (
     <div
       className={`navbar ${isLoginPage ? "" : "shadow-sm"}`}
@@ -70,7 +74,6 @@ const Navbar = () => {
                     alt="Tailwind CSS Navbar component"
                     src={user?.data?.photoURL}
                   />
-                  {console.log(user.photoURL)}
                 </div>
               </div>
               <ul
@@ -81,7 +84,7 @@ const Navbar = () => {
                   <a>Home</a>
                 </li>
                 <li>
-                  <a className="justify-between">
+                  <a className="justify-between" onClick={handleProfile}>
                     Profile
                     <span className="badge">New</span>
                   </a>
