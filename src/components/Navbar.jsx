@@ -53,7 +53,7 @@ const Navbar = () => {
           <div className="hidden md:flex gap-2 items-center mx-4">
             <ul className="flex gap-10 mr-4">
               {navItems.map((item) => (
-               <Link to = {item.path}> <li key={item.id} className="flex flex-col items-center">
+               <Link key={item.id} to = {item.path}> <li  className="flex flex-col items-center">
                {item.icon}
                <span className="text-[0.8rem]">{item.title}</span>
              </li></Link>
@@ -92,7 +92,7 @@ const Navbar = () => {
                   <Link to="/connections">Connections</Link>
                 </li>
                 <li className="md:hidden">
-                  <Link>Requests</Link>
+                  <Link to = "/requests">Requests</Link>
                 </li>
                 <li className="md:visible">
                   <a onClick={handleLogout}>Logout</a>

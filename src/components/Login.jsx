@@ -11,10 +11,10 @@ import { useNavigate } from "react-router";
 import { BASE_URL } from "../../utils/constant";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("nadiyee773@gmail.com");
-  const [password, setPassword] = useState("Nadiyee@1234");
-  const [firstName, setFirstName] = useState("Hamza");
-  const [lastName, setLastName] = useState("yaqoob");
+  const [emailId, setEmailId] = useState("elon77@gmail.com");
+  const [password, setPassword] = useState("Elon@1234");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [remember, setRemember] = useState(false);
   const [isLoginForm, setisLoginForm] = useState(false);
   const [loginError, setLoginError] = useState("");

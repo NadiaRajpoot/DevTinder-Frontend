@@ -7,7 +7,7 @@ export const navItems = [
         viewBox="0 0 24 24"
         data-supported-dps="24x24"
         fill="currentColor"
-        class="mercado-match"
+        className="mercado-match"
         width="24"
         height="24"
         focusable="false"
@@ -16,7 +16,7 @@ export const navItems = [
       </svg>
     ),
     title: "Home",
-    path:"/"
+    path: "/",
   },
   {
     id: "2",
@@ -26,7 +26,7 @@ export const navItems = [
         viewBox="0 0 24 24"
         data-supported-dps="24x24"
         fill="currentColor"
-        class="mercado-match"
+        className="mercado-match"
         width="24"
         height="24"
         focusable="false"
@@ -35,7 +35,7 @@ export const navItems = [
       </svg>
     ),
     title: "requests",
-    path:"/requests"
+    path: "/requests",
   },
   {
     id: "3",
@@ -45,7 +45,7 @@ export const navItems = [
         viewBox="0 0 24 24"
         data-supported-dps="24x24"
         fill="currentColor"
-        class="mercado-match"
+        className="mercado-match"
         width="24"
         height="24"
         focusable="false"
@@ -54,7 +54,7 @@ export const navItems = [
       </svg>
     ),
     title: "connections",
-    path:"/connections"
+    path: "/connections",
   },
   {
     id: "4",
@@ -64,7 +64,7 @@ export const navItems = [
         viewBox="0 0 24 24"
         data-supported-dps="24x24"
         fill="currentColor"
-        class="mercado-match"
+        className="mercado-match"
         width="24"
         height="24"
         focusable="false"
@@ -73,6 +73,6 @@ export const navItems = [
       </svg>
     ),
     title: "messages",
-    path:"/messages"
+    path: "/messages",
   },
 ];
