@@ -1,44 +1,97 @@
-import React from "react";
-import { useContext } from "react";
+
 import { ThemeContext } from "../ThemeContext";
+
+import React from "react";
+import TinderCard from "react-tinder-card";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addRequests } from "../../utils/requestsSlice";
+import { removeFromFeed } from "../../utils/feedSlice";
+import { BASE_URL } from "../../utils/constant";
+import { useContext } from "react";
 const UserCard = ({ user }) => {
   const { theme } = useContext(ThemeContext);
-  const { firstName, lastName, about, photoURL, age, gender, skills } = user;
+  const dispatch = useDispatch();
+
+  const { _id, firstName, lastName, about, age, gender, skills, photoURL } =
+    user;
+
+  const handleSwipe = (direction) => {
+    sendRequest(_id, direction === "left" ? "ignored" : "interested");
+  };
+
+  const sendRequest = async (userId, status) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/request/send/${status}/${userId}`,
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeFromFeed(userId)); // Assuming this removes the user from the feed
+      dispatch(addRequests(res.data)); // Assuming this adds the request to the Redux state
+    } catch (err) {
+      console.error("Error sending request:", err);
+    }
+  };
+
   return (
-    <div
-      className={`card  w-75 shrink-0 sm:w-85  shadow-lg ${
-        theme === "light" ? "bg-white  " : "bg-dark-400  "
-      } `}
+    <TinderCard
+      onSwipe={handleSwipe}
+      className={`${location.pathname === "/" ? "w-[320px]": "w-[400px]"} max-w-full cursor-grab active:cursor-grabbing`}
+      swipeRequirementType="position"
+      swipeThreshold={100}
+      preventSwipe={["up", "down"]}
     >
-      <figure className="w-full h-56 overflow-hidden">
-        <img src={photoURL} alt="user" className="w-full h-full object-cover" />
-      </figure>
-      <div className="card-body">
-        <div className="card-title ">{firstName + " " + lastName}</div>
-        <div className="flex gap-2 w-fit">
-          <div>{age} years old</div>
-          <p>-</p>
-          <p>{gender?.charAt(0).toUpperCase() + gender?.slice(1)}</p>
-        </div>
-        
-          <span className="mr-2"> Skills:  {skills?.length > 28 ? `${skills.substring(0, 28) }...` : skills }</span>
-       
-
-        <p className="mb-4 overflow-hidden text-[0.8rem]">
-          {about?.length > 100 ? `${about.substring(0, 100)}...` : about}
-        </p>
-
-        <div className="card-actions justify-end">
-          <button className="btn  font-medium text-[0.8rem] bg-gradient-to-b from-[#8c75e3] to-[#6f51ee] text-white py-2 rounded-lg shadow-md">
-            Ignore
-          </button>
-          <button className="btn   font-medium text-[0.8rem] bg-gradient-to-b from-[#8c75e3] to-[#6f51ee] text-white py-2 rounded-lg shadow-md">
-            Request Now
-          </button>
+      <div
+        className={`w-full h-full rounded-xl shadow-lg overflow-hidden flex flex-col ${
+          theme === "light" ? "bg-white" : "bg-dark-400"
+        }`}
+      >
+        <img
+          src={photoURL ? photoURL : ""}
+          draggable="false"
+          loading="lazy"
+          alt="user"
+          className="h-[60%] w-full object-cover"
+        />
+        <div className="flex flex-col justify-between p-4 bg-base-200 flex-grow">
+          <div className="font-semibold text-lg">
+            {firstName} {lastName}
+          </div>
+          <div className="flex gap-2 text-sm text-gray-600">
+            {age && <span>{age} years old</span>}
+            {age && <span>-</span>}
+            <span>{gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : ""}</span>
+          </div>
+          <div className="text-sm mt-2  text-gray-700">
+            <span className="font-medium ">Skills: </span>
+            {skills?.length > 28 ? `${skills.substring(0, 28)}...` : skills}
+          </div>
+          <p className="text-sm mt-2 text-gray-700">
+            {about?.length > 100 ? `${about.substring(0, 100)}...` : about}
+          </p>
+  
+          {location.pathname === "/" && (
+            <div className="flex justify-end gap-2 mt-4">
+              <button
+                className="btn text-xs bg-gradient-to-b from-[#8c75e3] to-[#6f51ee] text-white py-2 px-4 rounded-md"
+                onClick={() => sendRequest(_id, "ignored")}
+              >
+                Ignore
+              </button>
+              <button
+                className="btn text-xs bg-gradient-to-b from-[#8c75e3] to-[#6f51ee] text-white py-2 px-4 rounded-md"
+                onClick={() => sendRequest(_id, "interested")}
+              >
+                Request Now
+              </button>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </TinderCard>
   );
+  
 };
 
 export default UserCard;

@@ -6,10 +6,13 @@ import { BASE_URL } from "../../utils/constant";
 import { addFeed } from "../../utils/feedSlice";
 import UserCard from "./UserCard";
 import { LoadingContext } from "../LoadingContext";
+import { ThemeContext } from "../ThemeContext";
+
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const { isLoading, setIsLoading } = useContext(LoadingContext);
   const dispatch = useDispatch();
+  const {theme} = useContext(ThemeContext);
 
   const getFeed = async () => {
     setIsLoading(true);
@@ -42,11 +45,38 @@ const Feed = () => {
     );
   }
   return (
-    feed && (
-      <div className="flex justify-center my-5 ">
-        <UserCard user={feed[0]} />
-      </div>
-    )
+    <div className="flex-1 h-full flex flex-col items-center justify-center overflow-hidden relative py-10 mx-3">
+      {feed?.length === 0 ? (
+        <div className="text-center">
+          <h2 className={`sm:text-3xl text-2xl font-bold ${!theme? "text-neutral-content": "text-black" }`}>
+            No New Users Found!
+          </h2>
+          <img
+           
+            src="public/assets/empty-feed.svg"
+            alt="user-not-found"
+            className="block mx-auto w-96"
+          />
+        </div>
+      ) : (
+        <div className="relative w-full max-w-sm h-[550px]">
+          {feed?.map((user, index) => (
+            <div
+              key={user._id}
+              className="absolute inset-0 transition-transform duration-300 ease-in-out"
+              style={{
+                zIndex: feed.length - index,
+                transform: `translateY(${index * 10}px) scale(${
+                  1 - index * 0.03
+                })`,
+              }}
+            >
+              <UserCard user={user} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

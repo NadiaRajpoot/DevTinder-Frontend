@@ -3,20 +3,41 @@ import { LoadingContext } from "../LoadingContext";
 import { BASE_URL } from "../../utils/constant";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { ThemeContext } from "../ThemeContext";
 import { removeRequests } from "../../utils/requestsSlice";
+import { removeConnections } from "../../utils/connectionsSlice";
+import { Link } from "react-router-dom";
 
 const ListCard = ({ list, isConnectionPage }) => {
-  const dispatch  = useDispatch();
+  const { theme } = useContext(ThemeContext);
+  const dispatch = useDispatch();
+console.log(list)
   const reviewRequest = async (status, requestId) => {
     try {
       const res = await axios.post(
-        BASE_URL + `/request/review/${status}/${requestId}`, {},
-        { withCredentials: true }
+        BASE_URL + `/request/review/${status}/${requestId}`,
+        {},
+        { withCredentials: true },
+        dispatch(removeRequests(requestId))
       );
-      dispatch(removeRequests(requestId));
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const removeConnection = async (requestId) => {
+    try {
+      const res = await axios.delete(
+        BASE_URL + `/request/remove/${requestId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(removeConnections(requestId));
+    } catch (err) {
+      console.log(err);
+    }
+   
   };
   const { isLoading } = useContext(LoadingContext);
   if (isLoading) {
@@ -37,70 +58,81 @@ const ListCard = ({ list, isConnectionPage }) => {
       </h1>
 
       {list.map((connection, index) => {
-        const { firstName, lastName, photoURL, about } = connection;
-        return (
-          <div
-            key={index}
-            className="p-2 border-b-[1px] border-gray-300 flex justify-between w-[70%]"
-          >
-            <div className="flex gap-4">
-              <img
-                className="h-16 w-16 object-cover rounded-full border-2 border-gray-100"
-                src={
-                  isConnectionPage ? photoURL : connection?.fromUserId?.photoURL
-                }
-                alt="user"
-              />
-              <div>
-                <div className="text-center flex items-center">
-                  {isConnectionPage
-                    ? `${firstName?.charAt(0).toUpperCase()}${firstName?.slice(
-                        1
-                      )} ${lastName}`
-                    : `${connection?.fromUserId?.firstName
-                        ?.charAt(0)
-                        .toUpperCase()}${connection?.fromUserId?.firstName?.slice(
-                        1
-                      )} ${connection?.fromUserId?.lastName}`}
-                </div>
-                <div className="text-sm">
-                  {isConnectionPage
-                    ? about
-                      ? `${about.slice(0, 70)}...`
-                      : ""
-                    : connection?.fromUserId?.about
-                    ? `${connection?.fromUserId?.about.slice(0, 70)}...`
-                    : ""}
-                </div>
-                
-              </div>
-            </div>
+   
+   
+  
 
-            <div className="flex gap-2">
-              <button
-                className="text-sm rounded-full border-[1px] border-gray-300 px-4 py-2 
-                text-white bg-gradient-to-b from-[#8c75e3] to-[#6f51ee] w-fit h-8 flex justify-center items-center ml-auto"
-                onClick={() => 
-                  reviewRequest("accepted", connection._id)
-                }
-              >
-                Accept
-              </button>
-
-              {!isConnectionPage && (
-                <button
-                  className="text-sm rounded-full border-[1px] border-gray-300 px-4 py-2 
-                  text-black w-fit h-8 flex justify-end items-center ml-auto"
-                  onClick={() => 
-                    reviewRequest("rejected", connection._id)
-                  }
-                >
-                  Reject
-                </button>
-              )}
-            </div>
-          </div>
-        );
+   return (
+     <div
+     key={connection._id}
+       className="p-2 border-b-[1px] border-gray-300 flex justify-between w-[70%]"
+     >
+       <Link to={`/profile/${connection?.fromUserId?._id}`} className="flex gap-4 w-full">
+         <img
+           className="h-16 w-16 object-cover rounded-full border-2 border-gray-100"
+           src={
+             isConnectionPage
+               ? connection?.user?.photoURL
+               : connection?.fromUserId?.photoURL
+           }
+           alt="user"
+         />
+         <div>
+           <div className="text-center flex items-center">
+             {isConnectionPage ? (
+               <>
+                 {connection?.user?.firstName?.charAt(0).toUpperCase()}
+                 {connection?.user?.firstName?.slice(1)}{" "}
+                 {connection?.user?.lastName?.charAt(0).toUpperCase()}
+                 {connection?.user?.lastName.slice(1)}
+               </>
+             ) : (
+               <>
+                 {connection?.fromUserId?.firstName
+                   ?.charAt(0)
+                   .toUpperCase()}
+                 {connection?.fromUserId?.firstName?.slice(1)}{" "}
+                 {connection?.fromUserId?.lastName}
+               </>
+             )}
+           </div>
+   
+           <div className="text-[12px]">
+             {isConnectionPage
+               ? `${connection?.user?.about?.slice(0, 70)} ...`
+               : `${connection?.fromUserId?.about?.slice(0, 70)} ...`}
+           </div>
+         </div>
+       </Link> {/* Closing the Link */}
+       
+       <div className="flex gap-2">
+         <button
+           className="text-sm rounded-full border-[1px] border-gray-300 px-4 py-2 
+             text-white bg-gradient-to-b from-[#8c75e3] to-[#6f51ee] w-fit h-8 flex justify-center items-center ml-auto"
+           onClick={() => {
+             if (!isConnectionPage) {
+               reviewRequest("accepted", connection._id);
+             } else {
+               removeConnection(connection._id);
+             }
+           }}
+         >
+           {!isConnectionPage ? " Accept" : "unfriend"}
+         </button>
+   
+         {!isConnectionPage && (
+           <button
+             className={`text-sm rounded-full border-[1px] border-gray-300 px-4 py-2 
+               ${theme ? "text-black" : "text-white"} w-fit h-8 flex justify-end items-center ml-auto`}
+             onClick={() => reviewRequest("rejected", connection._id)}
+           >
+             Reject
+           </button>
+         )}
+       </div>
+     </div>
+   );
+   
       })}
     </div>
   );

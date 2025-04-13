@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import { ThemeContext } from "../ThemeContext";
 import { LoadingContext } from "../LoadingContext";
@@ -9,7 +9,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { BASE_URL } from "../../utils/constant";
 import { addUser } from "../../utils/userSlice";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function Body() {
@@ -34,6 +34,7 @@ function Body() {
       console.error(err);
     }
   };
+ 
 
   useEffect(() => {
     if (!userData) {
@@ -51,7 +52,7 @@ function Body() {
       >
         <Navbar />
         <Outlet />
-        {!isLoginPage && <Footer />}
+        {/* {!isLoginPage && <Footer />} */}
       </div>
     </ThemeContext.Provider>
     </LoadingContext.Provider>

@@ -7,8 +7,9 @@ import personIcon from "../assets/Form-icons/person.png";
 import { TfiWorld } from "react-icons/tfi";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/constant";
+
 
 const Login = () => {
   const [emailId, setEmailId] = useState("elon77@gmail.com");
@@ -26,6 +27,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleSignUp = async () => {
+    const toastId = toast.loading("Loading...");
     try {
       const res = await axios.post(
         BASE_URL + "/signup",
@@ -38,11 +40,13 @@ const Login = () => {
         { withCredentials: true }
       );
 
-      console.log("Signup successful", res.data);
+      toast.success(response.data.message);
       setisLoginForm(true); //  switch to login form after signup
     } catch (err) {
+    
       setSignupError(err.response?.data || "Signup failed!");
     }
+  
   };
 
   const handleLogin = async () => {
@@ -107,6 +111,7 @@ const Login = () => {
                     placeholder="First name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    req
                   />
                 </div>
                 <div

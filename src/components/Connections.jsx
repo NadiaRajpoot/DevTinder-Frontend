@@ -33,10 +33,18 @@ const Connections = () => {
   if (!connections) return null;
   if (connections.length === 0)
     return (
-      <div className="font-bold text-xl text-center my-10">
-        No connections found
+      <div>
+        <div className="font-bold text-2xl text-center my-10">
+          No connections found!
+        </div>
+        <img
+          src="public/assets/empty-connections.svg"
+          alt="user-not-found"
+          className="block mx-auto w-96"
+        />
       </div>
     );
+
   return (
     <>
       <ListCard list={connections} isConnectionPage={isConnectionPage} />
