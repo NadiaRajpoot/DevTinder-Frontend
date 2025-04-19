@@ -10,6 +10,7 @@ const Connections = () => {
   const { setIsLoading } = useContext(LoadingContext);
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connections);
+
   const getConnections = async () => {
     setIsLoading(true);
     try {
@@ -38,7 +39,7 @@ const Connections = () => {
           No connections found!
         </div>
         <img
-          src="public/assets/empty-connections.svg"
+          src="/assets/empty-connections.svg"
           alt="user-not-found"
           className="block mx-auto w-96"
         />
@@ -46,9 +47,9 @@ const Connections = () => {
     );
 
   return (
-    <>
+    <div>
       <ListCard list={connections} isConnectionPage={isConnectionPage} />
-    </>
+    </div>
   );
 };
 

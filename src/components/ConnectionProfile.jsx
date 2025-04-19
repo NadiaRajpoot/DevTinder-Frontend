@@ -1,61 +1,163 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-
-const ConnectionProfile = () => {
+import { useLocation, useParams } from "react-router-dom";
+import { ThemeContext } from "../ThemeContext";
+import { BASE_URL } from "../../utils/constant";
+const ConnectionProfile = (user) => {
+  const location = useLocation();
   const { userId } = useParams();
   const users = useSelector((store) => store.requests);
+  const connections = useSelector((store) => store.connections);
+  const { theme } = useContext(ThemeContext);
   const profile = users.filter((r) => r.fromUserId._id === userId);
+  const [copied, setCopied] = useState(false);
 
-  const { photoURL, firstName, lastName, about, skills, gender, age } =
-    profile?.[0]?.fromUserId || {};
+  const {
+    _id,
+    photoURL,
+    firstName,
+    lastName,
+    about,
+    skills,
+    gender,
+    age,
+    emailId,
+    headline,
+    city,
+    country,
+    mobileNumber,
+    coverPhotoURL,
+  } = profile?.[0]?.fromUserId || {};
 
+  const handleCopyLink = () => {
+    const profileURL = `${BASE_URL}/profile/${_id ? _id : user.user._id}`;
+    navigator.clipboard.writeText(profileURL).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
   return (
-    <div className="my-10 p-6 border-2 border-gray-200 rounded-lg shadow-lg mx-auto w-[70%]">
-      <div className="relative bg-gradient-to-b from-[#8c75e3] to-[#6f51ee] p-6 rounded-lg text-white">
-        {/* Profile Image */}
-        <img
-          className="w-32 h-32 object-cover rounded-full border-4 border-white absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/4"
-          src={photoURL}
-          alt="profileImage"
-        />
-        
-        {/* Profile Name and About */}
-        <div className="mt-20 text-center">
-          <h3 className="text-3xl font-semibold">
-            {firstName} {lastName}
-          </h3>
-          <p className="mt-2 text-sm text-gray-200">{about}</p>
-        </div>
-      </div>
+    <div
+      className={`${
+        location.pathname === "/profile" ? "w-full pb-10" : "pb-10"
+      }`}
+    >
+      <div
+        className={`${
+          location.pathname === "/profile"
+            ? "lg:w-[100%] xl:w-[100%]"
+            : "w-[95%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[70%]"
+        }  mx-auto my-10 rounded shadow-xl bg-base-300 relative `}
+      >
+        {/* Cover Image */}
+        <div className="relative">
+          <img
+            src={
+              location.pathname === "/profile"
+                ? user.user.coverPhotoURL
+                : coverPhotoURL
+            }
+            className="w-full h-40 sm:h-52 md:h-64 object-cover"
+            alt="cover"
+          />
 
-      {/* Profile Details */}
-      <div className="mt-8 bg-white p-6 rounded-lg shadow-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Skills Section */}
-          <div>
-            <h4 className="text-xl font-semibold text-gray-700">Skills</h4>
-            <ul className="mt-2 list-disc list-inside">
-              {skills?.map((skill, index) => (
-                <li key={index} className="text-sm text-gray-600">
-                  {skill}
-                </li>
-              ))}
-            </ul>
+          {/* Profile Image */}
+          <img
+            src={
+              location.pathname === "/profile" ? user.user.photoURL : photoURL
+            }
+            alt="Profile"
+            className={`absolute w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full object-cover border-4 ${
+              theme ? "border-white" : "border-black"
+            } -bottom-10 sm:-bottom-14 left-4 sm:left-8 md:left-12`}
+          />
+        </div>
+
+        {/* Text Content */}
+        <div className="pt-14 sm:pt-20 md:pt-18 px-4 sm:px-6 md:px-10">
+          <h4 className="text-lg sm:text-xl md:text-2xl font-semibold">
+            {location.pathname === "/profile" ? user.user.firstName : firstName}{" "}
+            {location.pathname === "/profile" ? user.user.lastName : lastName}
+          </h4>
+          <p className="text-sm sm:text-base text-gray-600">
+            {location.pathname === "/profile" ? user.user.headline : headline}
+          </p>
+
+          <div className="mt-2">
+            <p className="text-xs sm:text-sm text-gray-500">
+              {location.pathname === "/profile" ? user.user.city : city},{" "}
+              {location.pathname === "/profile" ? user.user.country : country}
+            </p>
+            <p className="text-[0.3rem] sm:text-sm text-blue-600 font-medium">
+              {connections.length === 0
+                ? "No connections yet. Be the first to connect!"
+                : `${connections.length} connection${
+                    connections.length > 1 ? "s" : ""
+                  }`}
+            </p>
           </div>
 
-          {/* Personal Details Section */}
-          <div>
-            <h4 className="text-xl font-semibold text-gray-700">Personal Info</h4>
-            <p className="mt-2 text-sm text-gray-600">Gender: {gender}</p>
-            <p className="mt-2 text-sm text-gray-600">Age: {age}</p>
+          <div className="my-4 flex gap-2">
+            <button className="bg-gradient-to-b text-sm from-[#8c75e3] to-[#6f51ee] text-white py-2 rounded-full shadow-lg w-full">
+              Message
+            </button>
+
+            <button
+              onClick={handleCopyLink}
+              className={`bg-transparent text-sm ${
+                !theme ? "text-white border-white" : "text-black border-black"
+              } py-2 rounded-full shadow-lg px-6 border w-full`}
+            >
+              {copied ? "Link Copied!" : "Copy Profile Link"}
+            </button>
+          </div>
+
+          <hr className="text-gray-400" />
+          <div className="py-4">
+            <span className="font-semibold">About</span>
+            <p className="text-sm font-light">
+              {location.pathname === "/profile" ? user.user.about : about}
+            </p>
+          </div>
+
+          <hr className="text-gray-400" />
+          <div className="py-4">
+            <span className="font-semibold">Skills & More</span>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <span className="bg-base-100 text-gray-500 text-xs font-medium px-3 py-1 rounded-full">
+                {location.pathname === "/profile" ? user.user.skills : skills}
+              </span>
+
+              {
+                <span className="bg-base-100 text-gray-500 text-xs font-medium px-3 py-1 rounded-full">
+                  Gender:{" "}
+                  {location.pathname === "/profile" ? user.user.gender : gender}
+                </span>
+              }
+
+              {
+                <span className="bg-base-100 text-gray-500 text-xs font-medium px-3 py-1 rounded-full">
+                  Age: {location.pathname === "/profile" ? user.user.age : age}
+                </span>
+              }
+            </div>
+          </div>
+
+          <hr className="text-gray-400" />
+          <div className="py-4">
+            <span className="font-semibold">Contact Information</span>
+            <p className="text-sm font-light text-gray-500">
+              Phone:{" "}
+              {location.pathname === "/profile"
+                ? user.user.mobileNumber
+                : mobileNumber}
+            </p>
+            <p className="text-sm font-light text-gray-500">
+              EmailId:{" "}
+              {location.pathname === "/profile" ? user.user.email : emailId}
+            </p>
           </div>
         </div>
-      </div>
-
-      {/* Connection Count Section */}
-      <div className="mt-6 text-center">
-        <p className="text-lg font-medium text-gray-700">500+ Connections</p>
       </div>
     </div>
   );

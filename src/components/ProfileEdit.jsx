@@ -5,6 +5,9 @@ import { BASE_URL } from "../../utils/constant";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice";
 import axios from "axios";
+import ConnectionProfile from "../components/ConnectionProfile";
+import { useLocation } from "react-router-dom";
+
 const ProfileEdit = ({ user }) => {
   const [age, setAge] = useState(user?.data?.age);
   const [firstName, setFirstName] = useState(user?.data?.firstName);
@@ -18,26 +21,38 @@ const ProfileEdit = ({ user }) => {
   const [mobileNumber, setmobileNumber] = useState(user?.data?.mobileNumber);
   const [headline, setHeadline] = useState(user?.data?.headline);
   const [about, setAbout] = useState(user?.data?.about);
-  // const [coverPhoto , setCoverPhoto] = useState(user?.data?.about);
+  const [coverPhotoURL, setCoverPhotoURL] = useState(user?.data?.coverPhotoURL);
   const [showToast, setShowToast] = useState(false);
   const [error, setError] = useState("");
   const { theme } = useContext(ThemeContext);
   const dispatch = useDispatch();
-
+const location= useLocation();
   const handleSaveProfile = async () => {
     setError("");
 
     try {
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
-        { photoURL, age, gender, skills, about, firstName, lastName },
+        {
+          photoURL,
+          age,
+          gender,
+          skills,
+          about,
+          city,
+          gender,
+          country,
+          coverPhotoURL,
+          mobileNumber,
+          headline
+        },
         { withCredentials: true }
       );
       dispatch(addUser(res?.data?.data));
       setShowToast(true);
       setTimeout(() => {
-        setShowToast(true);
-      });
+        setShowToast(false);
+      }, 2000);
     } catch (err) {
       const errorMessage = err?.response?.data?.error;
       if (errorMessage) {
@@ -46,21 +61,23 @@ const ProfileEdit = ({ user }) => {
     }
   };
 
+
+
   return (
     <>
       <div
-        className="flex flex-col md:flex-row gap-8 md:items-start items-center justify-center w-full p-6 mx-5"
+        className={`${location.pathname === "/profile" && "flex-1 " 
+        } flex flex-col md:flex-row gap-8 md:items-start items-center justify-center p-6 mx-5`}
         data-theme={`${theme ? "light" : "dark"}`}
       >
         {/* Profile Edit Form */}
         <div
           className={`w-full md:flex-1 rounded-2xl shadow-lg ${
-            theme === "light" ? "bg-white" : "bg-dark-300"
+            theme === "light" ? "bg-white" : "bg-base-300"
           }`}
         >
           <div className="card-body bg-base-200 p-6 rounded-lg">
             <h2 className="card-title text-xl text-center">Edit Profile</h2>
-            
 
             <fieldset className="mt-4">
               {/* First & Last Name */}
@@ -71,7 +88,7 @@ const ProfileEdit = ({ user }) => {
                   </label>
                   <input
                     type="text"
-                    className="input input-bordered w-full h-12  outline-[1px] outline-gray-200 cursor-not-allowed"
+                    className="input input-bordered w-full h-12 outline-[1px] outline-gray-200 cursor-not-allowed"
                     placeholder="First name"
                     value={firstName}
                     disabled
@@ -90,6 +107,7 @@ const ProfileEdit = ({ user }) => {
                   />
                 </div>
               </div>
+
               {/* Email */}
               <div className="mb-4">
                 <label className="text-sm font-medium mb-1 block text-left text-gray-700">
@@ -97,7 +115,7 @@ const ProfileEdit = ({ user }) => {
                 </label>
                 <input
                   type="email"
-                  className="input w-full h-12 bg-base-200 text-gray-500 border  outline-[1px] outline-gray-200 cursor-not-allowed"
+                  className="input w-full h-12 bg-base-200 text-gray-500 border outline-[1px] outline-gray-200 cursor-not-allowed"
                   placeholder="yourname@example.com"
                   value={email}
                   disabled
@@ -118,7 +136,7 @@ const ProfileEdit = ({ user }) => {
                 />
               </div>
 
-              {/* Photo URL with Preview on Left */}
+              {/* Profile Photo URL */}
               <div className="mb-4">
                 <label className="text-sm font-medium mb-1 block text-left text-gray-700">
                   Profile Photo URL
@@ -137,6 +155,29 @@ const ProfileEdit = ({ user }) => {
                     placeholder="Photo URL"
                     value={photoURL}
                     onChange={(e) => setPhotoURL(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Cover Photo URL */}
+              <div className="mb-4">
+                <label className="text-sm font-medium mb-1 block text-left text-gray-700">
+                  Cover Photo URL
+                </label>
+                <div className="flex items-center gap-3">
+                  {coverPhotoURL && (
+                    <img
+                      src={coverPhotoURL}
+                      alt="Preview"
+                      className="w-12 h-12 rounded-full object-cover border border-gray-300"
+                    />
+                  )}
+                  <input
+                    type="text"
+                    className="input input-bordered w-full h-12 focus:outline-0"
+                    placeholder="Cover Photo URL"
+                    value={coverPhotoURL}
+                    onChange={(e) => setCoverPhotoURL(e.target.value)}
                   />
                 </div>
               </div>
@@ -280,23 +321,9 @@ const ProfileEdit = ({ user }) => {
         </div>
 
         {/* Live Preview Card */}
-        <div className="md:w-[350px] w-full">
-          <UserCard
-            user={{
-              firstName,
-              lastName,
-              photoURL,
-              age,
-              gender,
-              city,
-              country,
-              email,
-              mobileNumber,
-              skills,
-              about,
-              headline,
-            }}
-          />
+        <div className={`${location.pathname === "/profile" ? "flex md:w-[500px] w-full" : "md:w-[350px] w-full"}`}>
+          {/* <UserCard user={...} /> */}
+          <ConnectionProfile user = {{ photoURL , firstName , lastName , age ,gender, skills , coverPhotoURL , city, country , headline , about,email, mobileNumber}}/>
         </div>
       </div>
 

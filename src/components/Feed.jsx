@@ -7,7 +7,7 @@ import { addFeed } from "../../utils/feedSlice";
 import UserCard from "./UserCard";
 import { LoadingContext } from "../LoadingContext";
 import { ThemeContext } from "../ThemeContext";
-
+import Loader from "./Loader";
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const { isLoading, setIsLoading } = useContext(LoadingContext);
@@ -15,7 +15,7 @@ const Feed = () => {
   const {theme} = useContext(ThemeContext);
 
   const getFeed = async () => {
-    setIsLoading(true);
+    setIsLoading(false);
     try {
       const res = await axios.get(BASE_URL + "/feed", {
         withCredentials: true,
@@ -29,19 +29,14 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    if (!feed || feed.length === 0) {
+   
       getFeed();
-    }
-  }, [feed]);
+    
+  }, []);
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-purple-500 mb-4"></div>
-        <p className="text-lg font-medium text-gray-600">
-          Loading, please wait...
-        </p>
-      </div>
+     <Loader/>
     );
   }
   return (
@@ -59,16 +54,14 @@ const Feed = () => {
           />
         </div>
       ) : (
-        <div className="relative w-full max-w-sm h-[550px]">
+        <div className="relative w-[320px] h-[500px]">
           {feed?.map((user, index) => (
             <div
               key={user._id}
               className="absolute inset-0 transition-transform duration-300 ease-in-out"
               style={{
                 zIndex: feed.length - index,
-                transform: `translateY(${index * 10}px) scale(${
-                  1 - index * 0.03
-                })`,
+      
               }}
             >
               <UserCard user={user} />

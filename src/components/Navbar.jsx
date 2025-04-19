@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constant";
 import { removeUser } from "../../utils/userSlice";
-
+import { toast } from "react-hot-toast";
+import { FaCircleCheck } from "react-icons/fa6";
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
   const location = useLocation();
@@ -18,17 +19,33 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const res = await axios.post(
-        BASE_URL + "/logout",
+        `${BASE_URL}/logout`,
         {},
         { withCredentials: true }
       );
+
       dispatch(removeUser());
-      return navigate("/login");
+
+      toast.success(res.data, {
+        duration: 3000,
+        style: {
+          background: "#ffffff",
+          color: "#1f2937",
+          border: "1px solid #e5e7eb",
+          padding: "12px 16px",
+          fontSize: "15px",
+          boxShadow: "0 4px 14px rgba(0, 0, 0, 0.05)",
+          borderRadius: "10px",
+        },
+        icon: <FaCircleCheck color="green" size={25} />,
+      });
+      navigate("/login");
+
+     
     } catch (err) {
-      console.log(err);
+      console.error("Logout failed:", err);
     }
   };
-
 
   return (
     <div
@@ -53,10 +70,13 @@ const Navbar = () => {
           <div className="hidden md:flex gap-2 items-center mx-4">
             <ul className="flex gap-10 mr-4">
               {navItems.map((item) => (
-               <Link key={item.id} to = {item.path}> <li  className="flex flex-col items-center">
-               {item.icon}
-               <span className="text-[0.8rem]">{item.title}</span>
-             </li></Link>
+                <Link key={item.id} to={item.path}>
+                  {" "}
+                  <li className="flex flex-col items-center">
+                    {item.icon}
+                    <span className="text-[0.8rem]">{item.title}</span>
+                  </li>
+                </Link>
               ))}
             </ul>
           </div>
@@ -92,7 +112,7 @@ const Navbar = () => {
                   <Link to="/connections">Connections</Link>
                 </li>
                 <li className="md:hidden">
-                  <Link to = "/requests">Requests</Link>
+                  <Link to="/requests">Requests</Link>
                 </li>
                 <li className="md:visible">
                   <a onClick={handleLogout}>Logout</a>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../ThemeContext";
 import emailIcon from "../assets/Form-icons/email.png";
 import passwordIcon from "../assets/Form-icons/password.png";
@@ -9,8 +9,9 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/constant";
-
-
+import toast from "react-hot-toast";
+import { FaCircleCheck } from "react-icons/fa6";
+import { RxCrossCircled } from "react-icons/rx";
 const Login = () => {
   const [emailId, setEmailId] = useState("elon77@gmail.com");
   const [password, setPassword] = useState("Elon@1234");
@@ -27,7 +28,8 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleSignUp = async () => {
-    const toastId = toast.loading("Loading...");
+    const toastId = toast.loading("Creating your account...");
+
     try {
       const res = await axios.post(
         BASE_URL + "/signup",
@@ -40,13 +42,38 @@ const Login = () => {
         { withCredentials: true }
       );
 
-      toast.success(response.data.message);
-      setisLoginForm(true); //  switch to login form after signup
+      toast.success(`${res.data.message}`, {
+        duration: 4000,
+        style: {
+          background: "#ffffff",
+          color: "#1f2937",
+          border: "1px solid #e5e7eb",
+          padding: "12px 16px",
+          fontSize: "15px",
+          boxShadow: "0 4px 14px rgba(0, 0, 0, 0.05)",
+          borderRadius: "10px",
+        },
+        icon: <FaCircleCheck color="green" size={25} />,
+      });
+
+      setisLoginForm(true);
     } catch (err) {
-    
+      toast.error(err.response?.data || "Signup failed!", {
+        id: toastId,
+        duration: 5000,
+        style: {
+          background: "#ffffff",
+          color: "#991b1b",
+          padding: "12px 16px",
+          fontSize: "15px",
+          boxShadow: "0 4px 14px rgba(0, 0, 0, 0.05)",
+          borderRadius: "5px",
+        },
+        icon: <RxCrossCircled color="red" size={28}/>,
+      });
+
       setSignupError(err.response?.data || "Signup failed!");
     }
-  
   };
 
   const handleLogin = async () => {
@@ -61,9 +88,36 @@ const Login = () => {
       );
 
       dispatch(addUser(res.data));
-      return navigate("/");
+
+      toast.success(`${res.data.message}`, {
+        duration: 4000,
+        style: {
+          background: "#ffffff",
+          color: "#1f2937",
+          border: "1px solid #e5e7eb",
+          padding: "12px 16px",
+          fontSize: "15px",
+          boxShadow: "0 4px 14px rgba(0, 0, 0, 0.05)",
+          borderRadius: "10px",
+        },
+        icon: <FaCircleCheck color="green" size={25} />,
+      });
+
+      navigate("/profile");
     } catch (err) {
       setLoginError(err.response?.data || "Login failed!");
+      toast.error(err.response?.data .slice(6)|| "Signup failed!", {
+        duration: 5000,
+        style: {
+          background: "#ffffff",
+          color: "red",
+          padding: "12px 16px",
+          fontSize: "15px",
+          boxShadow: "0 4px 14px rgba(0, 0, 0, 0.05)",
+          borderRadius: "5px",
+        },
+        icon: <RxCrossCircled color="red" size={25}/>,
+      });
     }
   };
 
@@ -111,7 +165,7 @@ const Login = () => {
                     placeholder="First name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    req
+                    
                   />
                 </div>
                 <div
@@ -169,7 +223,7 @@ const Login = () => {
 
             {(isLoginForm && loginError) || (!isLoginForm && signupError) ? (
               <p className="text-red-500 text-left ml-5 mb-2 text-xs">
-                {isLoginForm ? loginError : signupError}
+                {isLoginForm ? loginError.slice(6) : signupError.slice(6)}
               </p>
             ) : null}
 
@@ -181,7 +235,7 @@ const Login = () => {
                   onChange={() => setRemember(!remember)}
                   className="mr-2 rounded border-gray-400  "
                 />
-                Remember for 7 days
+                Remember me
               </label>
               {isLoginForm && (
                 <a

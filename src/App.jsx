@@ -9,9 +9,12 @@ import Feed from "./components/Feed";
 import { Provider } from "react-redux";
 import appStore from "../utils/appStore";
 import ConnectionProfile from "./components/ConnectionProfile";
+import { Toaster } from "react-hot-toast";
+
 function App() {
   return (
     <>
+    <Toaster position="top-right" reverseOrder={false} />
       <Provider store={appStore}>
         <BrowserRouter basename="/">
           <Routes>
