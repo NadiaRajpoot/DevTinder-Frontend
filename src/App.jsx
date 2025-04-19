@@ -24,7 +24,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/connections" element={<Connections />} />
               <Route path="/requests" element={<Requests/>} />
-              <Route path="/profile/:userId" element={<ConnectionProfile/>} />
+              <Route path="/profile/:profileCard/:userId" element={<ConnectionProfile/>} />
             </Route>
           </Routes>
         </BrowserRouter>
