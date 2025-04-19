@@ -8,6 +8,7 @@ import { BASE_URL } from "../../utils/constant";
 import { removeUser } from "../../utils/userSlice";
 import { toast } from "react-hot-toast";
 import { FaCircleCheck } from "react-icons/fa6";
+import { AuthFormContext } from "../LoginFormContext";
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
   const location = useLocation();
@@ -15,7 +16,7 @@ const Navbar = () => {
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { setisLoginForm } = useContext(AuthFormContext);
   const handleLogout = async () => {
     try {
       const res = await axios.post(
@@ -23,6 +24,7 @@ const Navbar = () => {
         {},
         { withCredentials: true }
       );
+      setisLoginForm(true);
 
       dispatch(removeUser());
 
@@ -40,8 +42,6 @@ const Navbar = () => {
         icon: <FaCircleCheck color="green" size={25} />,
       });
       navigate("/login");
-
-     
     } catch (err) {
       console.error("Logout failed:", err);
     }
@@ -91,7 +91,11 @@ const Navbar = () => {
                 <div className="w-10 rounded-full">
                   <img
                     alt="Tailwind CSS Navbar component"
-                    src={user?.data?.photoURL}
+                    src={
+                      user?.data?.photoURL
+                        ? user?.data?.photoURL
+                        : "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG.png"
+                    }
                   />
                 </div>
               </div>

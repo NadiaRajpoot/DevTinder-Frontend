@@ -56,6 +56,7 @@ const ListCard = ({ list, isConnectionPage }) => {
         {
           withCredentials: true,
         }
+
       );
       dispatch(removeConnections(requestId));
     } catch (err) {
@@ -75,15 +76,17 @@ const ListCard = ({ list, isConnectionPage }) => {
       {/* Loop through connections/requests */}
       {list && list.map((connection) => {
         return (
+          
           <div
-            key={connection._id}
+            key={connection?._id}
             className="p-2 border-b border-gray-700 dark:border-gray-600 flex justify-between md:w-[70%] w-full"
           >
+          
             {/* Profile Info & Actions Wrapper */}
             <div className="flex gap-4 flex-1">
               {/* Profile Link */}
               <Link
-                to={`/profile/${isConnectionPage ? connection?.user?._id:connection?.fromUserId?._id}`}
+                to={`/profile/${isConnectionPage? "connections": "request"}/${isConnectionPage ? connection?.user?._id:connection?.fromUserId?._id}`}
                 className="flex gap-4 md:gap-4 w-full"
               >
                 {/* Profile Image */}

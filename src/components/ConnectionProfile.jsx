@@ -3,14 +3,18 @@ import { useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { ThemeContext } from "../ThemeContext";
 import { BASE_URL } from "../../utils/constant";
+
 const ConnectionProfile = (user) => {
   const location = useLocation();
   const { userId } = useParams();
-  const users = useSelector((store) => store.requests);
-  const connections = useSelector((store) => store.connections);
   const { theme } = useContext(ThemeContext);
-  const profile = users.filter((r) => r.fromUserId._id === userId);
   const [copied, setCopied] = useState(false);
+
+  const requests = useSelector((store) => store.requests);
+  const connections = useSelector((store) => store.connections);
+
+  const requestProfile = requests?.filter((r) => r.fromUserId._id === userId);
+  const connectionProfile = connections?.filter((r) => r?.user?._id === userId);
 
   const {
     _id,
@@ -27,15 +31,22 @@ const ConnectionProfile = (user) => {
     country,
     mobileNumber,
     coverPhotoURL,
-  } = profile?.[0]?.fromUserId || {};
+  } = requestProfile?.[0]?.fromUserId || {};
 
   const handleCopyLink = () => {
-    const profileURL = `${BASE_URL}/profile/${_id ? _id : user.user._id}`;
+    const profileURL = `${BASE_URL}/profile/${
+      _id
+        ? _id
+        : connectionProfile[0]?.user?._id
+        ? connectionProfile[0]?.user?._id
+        : user.user._id
+    }`;
     navigator.clipboard.writeText(profileURL).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
+
   return (
     <div
       className={`${
@@ -55,6 +66,8 @@ const ConnectionProfile = (user) => {
             src={
               location.pathname === "/profile"
                 ? user.user.coverPhotoURL
+                : location.pathname.startsWith("/profile/connections/")
+                ? connectionProfile[0]?.user?.coverPhotoURL
                 : coverPhotoURL
             }
             className="w-full h-40 sm:h-52 md:h-64 object-cover"
@@ -64,7 +77,11 @@ const ConnectionProfile = (user) => {
           {/* Profile Image */}
           <img
             src={
-              location.pathname === "/profile" ? user.user.photoURL : photoURL
+              location.pathname === "/profile"
+                ? user.user.photoURL
+                : location.pathname.startsWith("/profile/connections/")
+                ? connectionProfile[0]?.user?.photoURL
+                : photoURL
             }
             alt="Profile"
             className={`absolute w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full object-cover border-4 ${
@@ -76,17 +93,38 @@ const ConnectionProfile = (user) => {
         {/* Text Content */}
         <div className="pt-14 sm:pt-20 md:pt-18 px-4 sm:px-6 md:px-10">
           <h4 className="text-lg sm:text-xl md:text-2xl font-semibold">
-            {location.pathname === "/profile" ? user.user.firstName : firstName}{" "}
-            {location.pathname === "/profile" ? user.user.lastName : lastName}
+            {location.pathname === "/profile"
+              ? user.user.firstName
+              : location.pathname.startsWith("/profile/connections/")
+              ? connectionProfile[0]?.user?.firstName
+              : firstName}{" "}
+            {location.pathname === "/profile"
+              ? user.user.lastName
+              : location.pathname.startsWith("/profile/connections/")
+              ? connectionProfile[0]?.user?.lastName
+              : lastName}
           </h4>
-          <p className="text-sm sm:text-base text-gray-600">
-            {location.pathname === "/profile" ? user.user.headline : headline}
+          <p className="text-[12px] sm:text-sm text-gray-600">
+            {location.pathname === "/profile"
+              ? user.user.headline
+              : location.pathname.startsWith("/profile/connections/")
+              ? connectionProfile[0]?.user?.headline
+              : headline}
           </p>
 
           <div className="mt-2">
             <p className="text-xs sm:text-sm text-gray-500">
-              {location.pathname === "/profile" ? user.user.city : city},{" "}
-              {location.pathname === "/profile" ? user.user.country : country}
+              {location.pathname === "/profile"
+                ? user.user.city
+                : location.pathname.startsWith("/profile/connections/")
+                ? connectionProfile[0]?.user?.city
+                : city}
+              ,{" "}
+              {location.pathname === "/profile"
+                ? user.user.country
+                : location.pathname.startsWith("/profile/connections/")
+                ? connectionProfile[0]?.user?.country
+                : country}
             </p>
             <p className="text-[0.3rem] sm:text-sm text-blue-600 font-medium">
               {connections.length === 0
@@ -116,7 +154,11 @@ const ConnectionProfile = (user) => {
           <div className="py-4">
             <span className="font-semibold">About</span>
             <p className="text-sm font-light">
-              {location.pathname === "/profile" ? user.user.about : about}
+              {location.pathname === "/profile"
+                ? user.user.about
+                : location.pathname.startsWith("/profile/connections/")
+                ? connectionProfile[0]?.user?.about
+                : about}
             </p>
           </div>
 
@@ -125,19 +167,32 @@ const ConnectionProfile = (user) => {
             <span className="font-semibold">Skills & More</span>
             <div className="flex flex-wrap gap-2 mt-2">
               <span className="bg-base-100 text-gray-500 text-xs font-medium px-3 py-1 rounded-full">
-                {location.pathname === "/profile" ? user.user.skills : skills}
+                {location.pathname === "/profile"
+                  ? user.user.skills
+                  : location.pathname.startsWith("/profile/connections/")
+                  ? connectionProfile[0]?.user?.skills
+                  : skills}
               </span>
 
               {
                 <span className="bg-base-100 text-gray-500 text-xs font-medium px-3 py-1 rounded-full">
                   Gender:{" "}
-                  {location.pathname === "/profile" ? user.user.gender : gender}
+                  {location.pathname === "/profile"
+                    ? user.user.gender
+                    : location.pathname.startsWith("/profile/connections/")
+                    ? connectionProfile[0]?.user?.gender
+                    : gender}
                 </span>
               }
 
               {
                 <span className="bg-base-100 text-gray-500 text-xs font-medium px-3 py-1 rounded-full">
-                  Age: {location.pathname === "/profile" ? user.user.age : age}
+                  Age:{" "}
+                  {location.pathname === "/profile"
+                    ? user.user.age
+                    : location.pathname.startsWith("/profile/connections/")
+                    ? connectionProfile[0]?.user?.age
+                    : age}
                 </span>
               }
             </div>
@@ -150,11 +205,17 @@ const ConnectionProfile = (user) => {
               Phone:{" "}
               {location.pathname === "/profile"
                 ? user.user.mobileNumber
+                : location.pathname.startsWith("/profile/connections/")
+                ? connectionProfile[0]?.user?.mobileNumber
                 : mobileNumber}
             </p>
             <p className="text-sm font-light text-gray-500">
               EmailId:{" "}
-              {location.pathname === "/profile" ? user.user.email : emailId}
+              {location.pathname === "/profile"
+                ? user.user.email
+                : location.pathname.startsWith("/profile/connections/")
+                ? connectionProfile[0]?.user?.emailId
+                : emailId}
             </p>
           </div>
         </div>

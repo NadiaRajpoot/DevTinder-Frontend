@@ -10,10 +10,11 @@ import { ThemeContext } from "../ThemeContext";
 import Loader from "./Loader";
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
-  const { isLoading, setIsLoading } = useContext(LoadingContext);
   const dispatch = useDispatch();
-  const {theme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
 
+  //getting feed data
   const getFeed = async () => {
     setIsLoading(false);
     try {
@@ -29,25 +30,24 @@ const Feed = () => {
   };
 
   useEffect(() => {
-   
-      getFeed();
-    
+    getFeed();
   }, []);
 
   if (isLoading) {
-    return (
-     <Loader/>
-    );
+    return <Loader />;
   }
   return (
     <div className="flex-1 h-full flex flex-col items-center justify-center overflow-hidden relative py-10 mx-3">
       {feed?.length === 0 ? (
         <div className="text-center">
-          <h2 className={`sm:text-3xl text-2xl font-bold ${!theme? "text-neutral-content": "text-black" }`}>
+          <h2
+            className={`sm:text-3xl text-2xl font-bold ${
+              !theme ? "text-neutral-content" : "text-black"
+            }`}
+          >
             No New Users Found!
           </h2>
           <img
-           
             src="public/assets/empty-feed.svg"
             alt="user-not-found"
             className="block mx-auto w-96"
@@ -55,18 +55,18 @@ const Feed = () => {
         </div>
       ) : (
         <div className="relative w-[320px] h-[500px]">
-          {feed?.map((user, index) => (
-            <div
-              key={user._id}
-              className="absolute inset-0 transition-transform duration-300 ease-in-out"
-              style={{
-                zIndex: feed.length - index,
-      
-              }}
-            >
-              <UserCard user={user} />
-            </div>
-          ))}
+          {feed &&
+            feed?.map((user, index) => (
+              <div
+                key={user._id}
+                className="absolute inset-0 transition-transform duration-300 ease-in-out"
+                style={{
+                  zIndex: feed.length - index,
+                }}
+              >
+                <UserCard user={user} />
+              </div>
+            ))}
         </div>
       )}
     </div>

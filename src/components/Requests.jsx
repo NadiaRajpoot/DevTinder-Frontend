@@ -4,16 +4,16 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests } from "../../utils/requestsSlice";
 import ListCard from "./ListCard";
-
-import { ThemeContext } from "../ThemeContext";
 import { LoadingContext } from "../LoadingContext";
 import Loader from "./Loader";
+
 const Requests = () => {
   const dispatch = useDispatch();
-  const { theme } = useContext(ThemeContext);
   const { setIsLoading } = useContext(LoadingContext);
   const requests = useSelector((store) => store.requests);
   const { isLoading } = useContext(LoadingContext);
+
+  //fetching Requests
   const getRequests = async () => {
     setIsLoading(true);
     try {
@@ -32,9 +32,8 @@ const Requests = () => {
     getRequests();
   }, []);
 
-
   if (isLoading) {
-     return <Loader />;
+    return <Loader />;
   }
 
   if (!requests) return null;

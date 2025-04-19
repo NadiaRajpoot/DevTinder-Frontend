@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { ThemeContext } from "../ThemeContext";
-import UserCard from "./UserCard";
 import { BASE_URL } from "../../utils/constant";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice";
@@ -26,7 +25,7 @@ const ProfileEdit = ({ user }) => {
   const [error, setError] = useState("");
   const { theme } = useContext(ThemeContext);
   const dispatch = useDispatch();
-const location= useLocation();
+  const location = useLocation();
   const handleSaveProfile = async () => {
     setError("");
 
@@ -36,7 +35,6 @@ const location= useLocation();
         {
           photoURL,
           age,
-          gender,
           skills,
           about,
           city,
@@ -44,7 +42,7 @@ const location= useLocation();
           country,
           coverPhotoURL,
           mobileNumber,
-          headline
+          headline,
         },
         { withCredentials: true }
       );
@@ -61,12 +59,11 @@ const location= useLocation();
     }
   };
 
-
-
   return (
     <>
       <div
-        className={`${location.pathname === "/profile" && "flex-1 " 
+        className={`${
+          location.pathname === "/profile" && "flex-1 "
         } flex flex-col md:flex-row gap-8 md:items-start items-center justify-center p-6 mx-5`}
         data-theme={`${theme ? "light" : "dark"}`}
       >
@@ -321,9 +318,31 @@ const location= useLocation();
         </div>
 
         {/* Live Preview Card */}
-        <div className={`${location.pathname === "/profile" ? "flex md:w-[500px] w-full" : "md:w-[350px] w-full"}`}>
-          {/* <UserCard user={...} /> */}
-          <ConnectionProfile user = {{ photoURL , firstName , lastName , age ,gender, skills , coverPhotoURL , city, country , headline , about,email, mobileNumber}}/>
+        <div
+          className={`${
+            location.pathname === "/profile"
+              ? "flex md:w-[500px] w-full"
+              : "md:w-[350px] w-full"
+          }`}
+        >
+         
+          <ConnectionProfile
+            user={{
+              photoURL,
+              firstName,
+              lastName,
+              age,
+              gender,
+              skills,
+              coverPhotoURL,
+              city,
+              country,
+              headline,
+              about,
+              email,
+              mobileNumber,
+            }}
+          />
         </div>
       </div>
 

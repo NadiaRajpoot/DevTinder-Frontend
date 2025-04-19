@@ -11,12 +11,14 @@ const UserCard = ({ user }) => {
   const { theme } = useContext(ThemeContext);
   const dispatch = useDispatch();
 
-  const { _id, firstName, lastName, about, age, gender, skills, photoURL } = user;
+  const { _id, firstName, lastName, about, age, gender, skills, photoURL } =
+    user;
 
   const handleSwipe = (direction) => {
     sendRequest(_id, direction === "left" ? "ignored" : "interested");
   };
 
+  //sending requests
   const sendRequest = async (userId, status) => {
     try {
       const res = await axios.post(
@@ -34,16 +36,14 @@ const UserCard = ({ user }) => {
   return (
     <TinderCard
       onSwipe={handleSwipe}
-      className={`${
-        location.pathname === "/" ? "w-[320px] h-[500px] " : "w-[400px] h-auto"
-      } max-w-full cursor-grab active:cursor-grabbing`}
+      className={`w-[400px] h-[500px] max-w-full cursor-grab active:cursor-grabbing`}
       swipeRequirementType="position"
       swipeThreshold={100}
       preventSwipe={["up", "down"]}
     >
       <div
         className={`w-full h-full rounded-xl  overflow-hidden shadow-lg flex flex-col ${
-          theme === "light" ? "bg-white" : "bg-dark-400"
+          theme === "light" ? "bg-white" : "bg-dark-300"
         }`}
       >
         <img
@@ -60,13 +60,15 @@ const UserCard = ({ user }) => {
           <div className="flex gap-2 text-sm text-gray-600">
             {age && <span>{age} years old</span>}
             {age && <span>-</span>}
-            <span>{gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : ""}</span>
+            <span>
+              {gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : ""}
+            </span>
           </div>
-          <div className="text-sm mt-2 text-gray-700">
+          <div className="text-sm mt-2 text-gray-500">
             <span className="font-medium">Skills: </span>
-            {skills.length > 100  ? `${skills.substring(0, 28)}...` : skills}
+            {skills.length > 100 ? `${skills.substring(0, 28)}...` : skills}
           </div>
-          <p className="text-sm mt-2 text-gray-700">
+          <p className="text-sm mt-2 text-gray-500">
             {about?.length > 100 ? `${about.substring(0, 100)}...` : about}
           </p>
 

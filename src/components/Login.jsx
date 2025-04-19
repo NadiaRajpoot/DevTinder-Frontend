@@ -12,24 +12,23 @@ import { BASE_URL } from "../../utils/constant";
 import toast from "react-hot-toast";
 import { FaCircleCheck } from "react-icons/fa6";
 import { RxCrossCircled } from "react-icons/rx";
+import { AuthFormContext } from "../LoginFormContext";
+
 const Login = () => {
   const [emailId, setEmailId] = useState("elon77@gmail.com");
   const [password, setPassword] = useState("Elon@1234");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [remember, setRemember] = useState(false);
-  const [isLoginForm, setisLoginForm] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [signupError, setSignupError] = useState("");
-
+  const { isLoginForm, setisLoginForm } = useContext(AuthFormContext);
   const { theme } = useContext(ThemeContext);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSignUp = async () => {
-    const toastId = toast.loading("Creating your account...");
-
     try {
       const res = await axios.post(
         BASE_URL + "/signup",
@@ -43,7 +42,7 @@ const Login = () => {
       );
 
       toast.success(`${res.data.message}`, {
-        duration: 4000,
+        duration: 1000,
         style: {
           background: "#ffffff",
           color: "#1f2937",
@@ -69,7 +68,7 @@ const Login = () => {
           boxShadow: "0 4px 14px rgba(0, 0, 0, 0.05)",
           borderRadius: "5px",
         },
-        icon: <RxCrossCircled color="red" size={28}/>,
+        icon: <RxCrossCircled color="red" size={28} />,
       });
 
       setSignupError(err.response?.data || "Signup failed!");
@@ -103,10 +102,10 @@ const Login = () => {
         icon: <FaCircleCheck color="green" size={25} />,
       });
 
-      navigate("/profile");
+      navigate("/");
     } catch (err) {
       setLoginError(err.response?.data || "Login failed!");
-      toast.error(err.response?.data .slice(6)|| "Signup failed!", {
+      toast.error(err.response?.data.slice(6) || "Login failed!", {
         duration: 5000,
         style: {
           background: "#ffffff",
@@ -116,7 +115,7 @@ const Login = () => {
           boxShadow: "0 4px 14px rgba(0, 0, 0, 0.05)",
           borderRadius: "5px",
         },
-        icon: <RxCrossCircled color="red" size={25}/>,
+        icon: <RxCrossCircled color="red" size={25} />,
       });
     }
   };
@@ -165,7 +164,6 @@ const Login = () => {
                     placeholder="First name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    
                   />
                 </div>
                 <div
