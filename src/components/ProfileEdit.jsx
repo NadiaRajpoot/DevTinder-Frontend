@@ -4,7 +4,7 @@ import { BASE_URL } from "../../utils/constant";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../utils/userSlice";
 import axios from "axios";
-import ConnectionProfile from "../components/ConnectionProfile";
+import ConnectionProfile from "./ConnectionProfile";
 import { useLocation } from "react-router-dom";
 
 const ProfileEdit = ({ user }) => {
