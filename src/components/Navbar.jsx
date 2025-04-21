@@ -9,6 +9,7 @@ import { removeUser } from "../../utils/userSlice";
 import { toast } from "react-hot-toast";
 import { FaCircleCheck } from "react-icons/fa6";
 import { AuthFormContext } from "../LoginFormContext";
+
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
   const location = useLocation();
@@ -27,7 +28,7 @@ const Navbar = () => {
       setisLoginForm(true);
 
       dispatch(removeUser());
-
+      
       toast.success(res.data, {
         duration: 3000,
         style: {
@@ -49,7 +50,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`navbar ${isLoginPage ? "" : "shadow-sm"}`}
+      className={`navbar ${isLoginPage ? "" : "shadow-md"} ${!theme && "shadow-primary/30"}`}
       data-theme={`${theme ? "light" : "dark"}`}
     >
       <div className="flex-1">
@@ -101,10 +102,10 @@ const Navbar = () => {
               </div>
               <ul
                 tabIndex={0}
-                className="menu  menu-sm dropdown-content bg-base-200 rounded-box z-1 mt-3 w-52 p-2 shadow"
+                className="menu  menu-sm dropdown-content bg-base-200 rounded-box z-1 mt-3 w-52 p-2 shadow-lg"
               >
                 <li className="md:hidden">
-                  <Link to="/">Home</Link>
+                  <Link to="/feed">Home</Link>
                 </li>
                 <li>
                   <Link className="justify-between" to="/profile">

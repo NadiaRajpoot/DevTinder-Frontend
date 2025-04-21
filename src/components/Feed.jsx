@@ -13,7 +13,7 @@ const Feed = () => {
   const dispatch = useDispatch();
   const { theme } = useContext(ThemeContext);
   const { isLoading, setIsLoading } = useContext(LoadingContext);
-
+console.log(feed)
   //getting feed data
   const getFeed = async () => {
     setIsLoading(false);
@@ -24,13 +24,18 @@ const Feed = () => {
 
       dispatch(addFeed(res?.data?.data));
       setIsLoading(false);
+      if (err.status === 401) {
+        return navigate("/login");
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
+  if(feed=== null){
     getFeed();
+  }
   }, []);
 
   if (isLoading) {

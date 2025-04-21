@@ -6,6 +6,7 @@ import Profile from "./components/Profile";
 import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 import Feed from "./components/Feed";
+import Hero from "./components/Hero";
 import { Provider } from "react-redux";
 import appStore from "../utils/appStore";
 import ConnectionProfile from "./components/ConnectionProfile";
@@ -19,7 +20,8 @@ function App() {
         <BrowserRouter basename="/">
           <Routes>
             <Route path="/" element={<Body />}>
-              <Route index element={<Feed />} />
+              <Route index element={<Hero/>} />
+              <Route path="/feed" element={<Feed />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/connections" element={<Connections />} />

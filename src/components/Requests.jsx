@@ -29,7 +29,9 @@ const Requests = () => {
   };
 
   useEffect(() => {
-    getRequests();
+    if (requests.length === 0) {
+      getRequests();
+    }
   }, []);
 
   if (isLoading) {

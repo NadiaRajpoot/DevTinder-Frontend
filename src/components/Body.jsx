@@ -31,7 +31,7 @@ function Body() {
       dispatch(addUser(res?.data));
     } catch (err) {
       if (err.status === 401) {
-        return navigate("/login");
+        return navigate("/");
       }
       console.error(err);
     }
@@ -53,7 +53,7 @@ function Body() {
         >
           <Navbar />
           <Outlet />
-          {/* {!isLoginPage && <Footer />} */}
+          {!isLoginPage && <Footer />}
         </div>
       </ThemeContext.Provider>
     </LoadingContext.Provider>

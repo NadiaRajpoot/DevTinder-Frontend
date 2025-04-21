@@ -5,7 +5,7 @@ import emailIcon from "../assets/Form-icons/email.png";
 import passwordIcon from "../assets/Form-icons/password.png";
 import personIcon from "../assets/Form-icons/person.png";
 import { TfiWorld } from "react-icons/tfi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/constant";
@@ -24,7 +24,7 @@ const Login = () => {
   const [signupError, setSignupError] = useState("");
   const { isLoginForm, setisLoginForm } = useContext(AuthFormContext);
   const { theme } = useContext(ThemeContext);
-
+  const userData = useSelector((store) => store.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -57,12 +57,11 @@ const Login = () => {
 
       setisLoginForm(true);
     } catch (err) {
-      toast.error(err.response?.data || "Signup failed!", {
-        id: toastId,
+      toast.error(err.response?.data?.slice(6) || "Signup failed!", {
         duration: 5000,
         style: {
           background: "#ffffff",
-          color: "#991b1b",
+          color: "red",
           padding: "12px 16px",
           fontSize: "15px",
           boxShadow: "0 4px 14px rgba(0, 0, 0, 0.05)",
@@ -71,7 +70,6 @@ const Login = () => {
         icon: <RxCrossCircled color="red" size={28} />,
       });
 
-      setSignupError(err.response?.data || "Signup failed!");
     }
   };
 
@@ -87,7 +85,7 @@ const Login = () => {
       );
 
       dispatch(addUser(res.data));
-
+      navigate("/feed");
       toast.success(`${res.data.message}`, {
         duration: 4000,
         style: {
@@ -101,8 +99,6 @@ const Login = () => {
         },
         icon: <FaCircleCheck color="green" size={25} />,
       });
-
-      navigate("/");
     } catch (err) {
       setLoginError(err.response?.data || "Login failed!");
       toast.error(err.response?.data.slice(6) || "Login failed!", {
@@ -120,6 +116,36 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    if (userData) {
+      // If already logged in, redirect to feed or homepage
+      navigate("/feed", { replace: true });
+      return;
+    }
+
+    // Push dummy state to history to trap back button
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = () => {
+      // Only allow going back to "/" (homepage)
+      const allowedBackRoutes = ["/"];
+      const previousUrl = document.referrer; // works if user came from another page
+      const isAllowed = allowedBackRoutes.some((route) =>
+        previousUrl.endsWith(route)
+      );
+
+      if (!isAllowed) {
+        navigate("/", { replace: true });
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [navigate]);
+
   return (
     <div
       className={`flex items-center justify-center rounded-2xl ${
@@ -129,7 +155,7 @@ const Login = () => {
     >
       <div
         className={`card  w-75 shrink-0 sm:w-85  shadow-lg ${
-          theme === "light" ? "bg-white  " : "bg-dark-300  "
+          theme === "light" ? "bg-white " : "bg-dark-300  "
         } `}
       >
         <div className="card-body rounded-xl  bg-gradient-to-b from-[#6f51ee]/10 to-transparent/90 p-6 text-center">
@@ -264,7 +290,8 @@ const Login = () => {
             }`}
             <a
               href="#"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 setisLoginForm(!isLoginForm);
               }}
               className="text-purple-600 hover:underline"

@@ -1,30 +1,29 @@
 import { useContext, useEffect, useState } from "react";
-import { BASE_URL } from "../../utils/constant";
-import axios from "axios";
+import { useLocation } from "react-router-dom"; 
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { BASE_URL } from "../../utils/constant";
 import { addConnections } from "../../utils/connectionsSlice";
 import ListCard from "./ListCard";
 import { LoadingContext } from "../LoadingContext";
+import Loader from "../components/Loader"; 
 
 const Connections = () => {
   const [isConnectionPage, setIsConnectionPage] = useState(false);
   const [error, setError] = useState(null);
-  const { setIsLoading } = useContext(LoadingContext);
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connections);
+  const location = useLocation(); 
 
-  //fetching connection requests
   const getConnections = async () => {
     setIsLoading(true);
     try {
       const res = await axios.get(`${BASE_URL}/user/requests/matched`, {
         withCredentials: true,
       });
-
-      if (res?.data?.data) {
-        dispatch(addConnections(res.data.data));
-        setIsConnectionPage(true);
-      }
+      dispatch(addConnections(res.data.data));
+      setIsConnectionPage(true);
     } catch (err) {
       console.error("Fetch connections failed:", err);
       setError(err?.response?.data || "Something went wrong");
@@ -34,12 +33,27 @@ const Connections = () => {
   };
 
   useEffect(() => {
-    getConnections();
-  }, []);
+    if (connections.length === 0) {
+      getConnections();
+    } else {
+      setIsConnectionPage(true);
+    }
 
-  if (!connections) return null;
+  }, [location.pathname]); 
 
-  if (connections.length === 0)
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500 font-medium mt-10">
+        {error.message || error}
+      </div>
+    );
+  }
+
+  if (!connections || connections.length === 0) {
     return (
       <div>
         <div className="font-bold text-2xl text-center my-10">
@@ -52,6 +66,7 @@ const Connections = () => {
         />
       </div>
     );
+  }
 
   return (
     <div>

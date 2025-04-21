@@ -72,7 +72,7 @@ const UserCard = ({ user }) => {
             {about?.length > 100 ? `${about.substring(0, 100)}...` : about}
           </p>
 
-          {location.pathname === "/" && (
+          {location.pathname === "/feed" && (
             <div className="flex justify-end gap-2 mt-auto pt-4">
               <button
                 className="btn text-xs bg-gradient-to-b from-[#8c75e3] to-[#6f51ee] text-white py-2 px-4 rounded-md"

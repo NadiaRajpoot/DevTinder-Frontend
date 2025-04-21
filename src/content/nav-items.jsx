@@ -16,7 +16,7 @@ export const navItems = [
       </svg>
     ),
     title: "Home",
-    path: "/",
+    path: "/feed",
   },
   {
     id: "2",
@@ -73,6 +73,6 @@ export const navItems = [
       </svg>
     ),
     title: "messages",
-    path: "/messages",
+    path: "#",
   },
 ];
