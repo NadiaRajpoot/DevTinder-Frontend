@@ -15,8 +15,8 @@ import { RxCrossCircled } from "react-icons/rx";
 import { AuthFormContext } from "../LoginFormContext";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("elon77@gmail.com");
-  const [password, setPassword] = useState("Elon@1234");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [remember, setRemember] = useState(false);
@@ -85,7 +85,7 @@ const Login = () => {
       );
 
       dispatch(addUser(res.data));
-      navigate("/feed");
+      navigate("/profile");
       toast.success(`${res.data.message}`, {
         duration: 4000,
         style: {
@@ -120,6 +120,7 @@ const Login = () => {
     if (userData) {
       // If already logged in, redirect to feed or homepage
       navigate("/feed", { replace: true });
+      console.log(isLoginForm)
       return;
     }
 

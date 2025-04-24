@@ -53,7 +53,7 @@ function Body() {
         >
           <Navbar />
           <Outlet />
-          {!isLoginPage && <Footer />}
+          {/* {!isLoginPage && <Footer />} */}
         </div>
       </ThemeContext.Provider>
     </LoadingContext.Provider>
