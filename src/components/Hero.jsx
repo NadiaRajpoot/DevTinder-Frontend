@@ -30,7 +30,7 @@ const Hero = () => {
         {/* Right Image */}
         <div className="w-full md:w-1/2 flex items-center justify-center">
           <img
-            src="src/assets/hero-img.png"
+            src="/public/assets/hero-img.png"
             alt="hero"
             className="h-full max-h-[500px] w-auto object-contain rounded-xl "
           />

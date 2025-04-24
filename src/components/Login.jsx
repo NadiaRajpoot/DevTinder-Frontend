@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../ThemeContext";
-import emailIcon from "../assets/Form-icons/email.png";
-import passwordIcon from "../assets/Form-icons/password.png";
-import personIcon from "../assets/Form-icons/person.png";
+import emailIcon from "../../public/assets/Form-icons/email.png";
+import passwordIcon from "../../public/assets/Form-icons/password.png";
+import personIcon from "../../public/assets/Form-icons/person.png";
 import { TfiWorld } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../utils/userSlice";
@@ -15,8 +15,8 @@ import { RxCrossCircled } from "react-icons/rx";
 import { AuthFormContext } from "../LoginFormContext";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("");
-  const [password, setPassword] = useState("");
+  const [emailId, setEmailId] = useState("mark77@gmail.com");
+  const [password, setPassword] = useState("Mark@1234");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [remember, setRemember] = useState(false);
@@ -69,7 +69,6 @@ const Login = () => {
         },
         icon: <RxCrossCircled color="red" size={28} />,
       });
-
     }
   };
 
@@ -118,9 +117,11 @@ const Login = () => {
 
   useEffect(() => {
     if (userData) {
-      // If already logged in, redirect to feed or homepage
-      navigate("/feed", { replace: true });
-      console.log(isLoginForm)
+      if (userData && Object.keys(userData).length > 0) {
+        navigate("/feed", { replace: true });
+      }
+
+      console.log(isLoginForm);
       return;
     }
 

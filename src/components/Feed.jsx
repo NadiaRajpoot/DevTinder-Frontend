@@ -13,7 +13,7 @@ const Feed = () => {
   const dispatch = useDispatch();
   const { theme } = useContext(ThemeContext);
   const { isLoading, setIsLoading } = useContext(LoadingContext);
-console.log(feed)
+
   //getting feed data
   const getFeed = async () => {
     setIsLoading(false);
