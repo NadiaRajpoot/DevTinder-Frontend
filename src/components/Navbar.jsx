@@ -58,8 +58,8 @@ const Navbar = () => {
           className="btn btn-ghost object-cover"
           src={`${
             theme
-              ? "public/assets/LightThemeLogo.png"
-              : "public/assets/DarkThemeLogo.png"
+              ? "/assets/LightThemeLogo.png"
+              : "/assets/DarkThemeLogo.png"
           }`}
           alt="logo"
         />
