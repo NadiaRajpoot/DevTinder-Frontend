@@ -31,7 +31,7 @@ const Login = () => {
   const handleSignUp = async () => {
     try {
       const res = await axios.post(
-        BASE_URL + "/signup",
+        BASE_URL + "auth/signup",
         {
           firstName,
           lastName,
@@ -75,7 +75,7 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        BASE_URL + "/login",
+        BASE_URL + "auth/login",
         {
           emailId,
           password,
