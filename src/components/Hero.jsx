@@ -4,7 +4,10 @@ import { HiUsers } from "react-icons/hi2";
 import { FiZap } from "react-icons/fi";
 import {Link} from "react-router-dom"
 import { FaArrowRight } from "react-icons/fa6";
+
 const Hero = () => {
+
+  
   return (
     <section className="px-4 py-20">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-stretch gap-12">

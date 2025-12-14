@@ -42,7 +42,7 @@ const UserCard = ({ user }) => {
       preventSwipe={["up", "down"]}
     >
       <div
-        className={`w-full h-full rounded-xl  overflow-hidden shadow-lg flex flex-col ${
+        className={`w-full h-full rounded-xl  overflow-hidden shadow-sm shadow-base-300 flex flex-col ${
           theme === "light" ? "bg-white" : "bg-dark-300"
         }`}
       >

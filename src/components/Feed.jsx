@@ -36,6 +36,10 @@ const Feed = () => {
   if(feed=== null){
     getFeed();
   }
+
+  if(location.pathname === "/"){
+    navigate("/feed")
+  }
   }, []);
 
   if (isLoading) {
@@ -53,7 +57,7 @@ const Feed = () => {
             No New Users Found!
           </h2>
           <img
-            src="public/assets/empty-feed.svg"
+            src="/assets/empty-feed.svg"
             alt="user-not-found"
             className="block mx-auto w-96"
           />

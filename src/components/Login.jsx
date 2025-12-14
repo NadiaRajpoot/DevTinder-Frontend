@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useState, useContext, useEffect } from "react";
 import { ThemeContext } from "../ThemeContext";
-import emailIcon from "../../public/assets/Form-icons/email.png";
-import passwordIcon from "../../public/assets/Form-icons/password.png";
-import personIcon from "../../public/assets/Form-icons/person.png";
+import emailIcon from "/assets/Form-icons/email.png?url";
+import passwordIcon from "/assets/Form-icons/password.png?url";
+import personIcon from "/assets/Form-icons/person.png?url";
 import { TfiWorld } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../utils/userSlice";
