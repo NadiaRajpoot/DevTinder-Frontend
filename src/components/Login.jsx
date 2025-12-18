@@ -82,7 +82,10 @@ const Login = () => {
         },
         { withCredentials: true }
       );
-
+      // Save token for Authorization fallback when cookies are blocked
+      if (res?.data?.token) {
+        localStorage.setItem('token', res.data.token);
+      }
       dispatch(addUser(res.data));
       navigate("/profile");
       toast.success(`${res.data.message}`, {
