@@ -36,7 +36,7 @@ const UserCard = ({ user }) => {
   return (
     <TinderCard
       onSwipe={handleSwipe}
-      className={`w-[400px] h-[500px] max-w-full cursor-grab active:cursor-grabbing`}
+      className={`w-[400px] h-[580px] max-w-full cursor-grab active:cursor-grabbing`}
       swipeRequirementType="position"
       swipeThreshold={100}
       preventSwipe={["up", "down"]}
@@ -53,7 +53,7 @@ const UserCard = ({ user }) => {
           alt="user"
           className="h-[60%] w-full object-cover"
         />
-        <div className="flex flex-col justify-between p-4 bg-base-200 flex-grow">
+        <div className="flex flex-col justify-between p-4 pb-6 bg-base-200 flex-grow">
           <div className="font-semibold text-lg">
             {firstName} {lastName}
           </div>

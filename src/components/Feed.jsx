@@ -63,7 +63,7 @@ const Feed = () => {
           />
         </div>
       ) : (
-        <div className="relative w-[320px] h-[500px]">
+        <div className="relative w-[320px] h-[580px]">
           {feed &&
             feed?.map((user, index) => (
               <div
