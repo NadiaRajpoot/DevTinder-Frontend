@@ -26,10 +26,7 @@ const Navbar = () => {
         { withCredentials: true }
       );
       setisLoginForm(true);
-      
-      // Clear token from localStorage
-      localStorage.removeItem('token');
-      
+
       dispatch(removeUser());
       
       toast.success(res.data, {
