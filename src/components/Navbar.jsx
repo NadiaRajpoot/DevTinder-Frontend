@@ -20,11 +20,17 @@ const Navbar = () => {
   const { setisLoginForm } = useContext(AuthFormContext);
   const handleLogout = async () => {
     try {
-      const res = await axios.post(
-       BASE_URL + "/auth/logout",
-        {},
-        { withCredentials: true }
-      );
+      try {
+    const res = await axios.post(
+      `${BASE_URL}/auth/logout`,
+      {}, // empty body
+      {
+        withCredentials: true, // ensures cookies are sent
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
       setisLoginForm(true);
 
       dispatch(removeUser());
