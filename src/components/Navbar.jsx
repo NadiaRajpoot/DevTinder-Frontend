@@ -21,12 +21,15 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const res = await axios.post(
-        `${BASE_URL}auth/logout`,
+        `${BASE_URL}/auth/logout`,
         {},
         { withCredentials: true }
       );
       setisLoginForm(true);
-
+      
+      // Clear token from localStorage
+      localStorage.removeItem('token');
+      
       dispatch(removeUser());
       
       toast.success(res.data, {
